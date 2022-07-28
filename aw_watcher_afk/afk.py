@@ -40,11 +40,15 @@ class AFKWatcher:
         # Read settings from config
         configsection = "aw-watcher-afk" if not testing else "aw-watcher-afk-testing"
         self.settings = Settings(watcher_config[configsection])
-
         self.client = ActivityWatchClient("aw-watcher-afk", testing=testing)
-        self.bucketname = "{}_{}".format(
-            self.client.client_name, self.client.client_hostname
-        )
+        if self.client.localToken is None:
+            logger.info("No local token found, quitting")
+            exit()
+        
+        if self.client.is_authenticated:
+            self.bucketname = "{}_{}".format(
+                self.client.client_name, self.client.client_hostname
+            )
 
     def ping(self, afk: bool, timestamp: datetime, duration: float = 0):
         data = {"status": "afk" if afk else "not-afk"}
