@@ -45,7 +45,7 @@ class AFKWatcher:
             logger.info("No local token found, quitting")
             exit()
         
-        if self.client.is_authenticated:
+        if self.client.auth_status == "Success":
             self.bucketname = "{}_{}".format(
                 self.client.client_name, self.client.client_hostname
             )
